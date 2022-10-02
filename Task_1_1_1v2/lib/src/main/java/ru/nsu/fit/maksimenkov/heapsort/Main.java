@@ -1,23 +1,24 @@
-package ru.nsu.fit.maximenkov.heapsort;
+package ru.nsu.fit.maksimenkov.heapsort;
+
+import java.util.Arrays;
 
 public class Main {
-    public static void main(String[] args){
-        Add add = new Add();
-        Extract extr = new Extract();
-        ShiftDown sd = new ShiftDown();
-        int curr;
-        int[] arr_input = new int[] {5, 4, 3, 2, 1};
-        int[] heap = new int[100500];
-        int len = arr_input.length;
-        for (int i = 0; i < len; i++){
-            add.add_new(heap, i, arr_input[i]);
-        }
-        int last = len - 1;
-        for (int i = 0; i < len; i++){
-            curr = extr.extractMin(heap, last);
-            System.out.println(curr);
-            last--;
-            sd.shiftDown(heap, 0, last);
-        }
+  public static void sort(int[] arr) {
+    Add add = new Add();
+    Extract extr = new Extract();
+    ShiftDown sd = new ShiftDown();
+    int curr;
+    int[] heap = new int[100500];
+    int len = arr.length;
+    for (int i = 0; i < len; i++) {
+      add.add_new(heap, i, arr[i]);
     }
+    int last = len - 1;
+    for (int i = 0; i < len; i++) {
+      arr[i] = extr.extractMin(heap, last);
+      last--;
+      sd.shiftDown(heap, 0, last);
+    }
+    System.out.println("result:" + Arrays.toString(arr));
+  }
 }

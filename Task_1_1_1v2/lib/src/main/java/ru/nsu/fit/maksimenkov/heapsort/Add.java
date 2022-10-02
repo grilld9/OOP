@@ -1,4 +1,4 @@
-package ru.nsu.fit.maximenkov.heapsort;
+package ru.nsu.fit.maksimenkov.heapsort;
 
 public class Add {
     ShiftUp su = new ShiftUp();

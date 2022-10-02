@@ -1,4 +1,4 @@
-package ru.nsu.fit.maximenkov.heapsort;
+package ru.nsu.fit.maksimenkov.heapsort;
 public class ShiftDown {
     int buffer = 0;
     public void shiftDown(int[] arr, int idx, int last){
