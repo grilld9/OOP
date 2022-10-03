@@ -14,6 +14,7 @@ class Tests {
         System.out.println("test#1:" + Arrays.toString(array));
         Main ma = new Main();
         ma.sort(array);
+        System.out.println();
     }
     @Test
     public void test2() {
@@ -21,6 +22,14 @@ class Tests {
         System.out.println("test#2:" + Arrays.toString(array));
         Main ma = new Main();
         ma.sort(array);
+        System.out.println();
     }
-
+    @Test
+    public void test3() {
+        int[] array = new int[]{-5, -4, 2, 54, -54, 4, 8, -8, -25, 1, 0};
+        System.out.println("test#3:" + Arrays.toString(array));
+        Main ma = new Main();
+        ma.sort(array);
+        System.out.println();
+    }
 }
