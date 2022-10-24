@@ -18,7 +18,7 @@ class Tests {
         Assertions.assertArrayEquals(array, arraySorted);
     }
     @Test
-    public void test2() {
+    public void testOfRandomOrder() {
         int[] array = new int[]{5, 6, 3, 9, 4, 6, 2, 0, 1, 3, 6, 8, 65, 34, 32, 77, 21, 79};
         int[] arraySorted = new int[]{0, 1, 2, 3, 3, 4, 5, 6, 6, 6, 8, 9, 21, 32, 34, 65, 77, 79};
         HeapSort ma = new HeapSort();
@@ -26,7 +26,7 @@ class Tests {
         Assertions.assertArrayEquals(array, arraySorted);
     }
     @Test
-    public void test3() {
+    public void testOfNegativeElements() {
         int[] array = new int[]{-5, -4, 2, 54, -54, 4, 8, -8, -25, 1, 0};
         int[] arraySorted = new int[]{-54, -25, -8, -5, -4, 0, 1, 2, 4, 8, 54};
         HeapSort ma = new HeapSort();

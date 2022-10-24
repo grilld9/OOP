@@ -7,7 +7,7 @@ import java.util.Arrays;
  */
 public class HeapSort {
 
-  int buffer = 0;
+  private int buffer = 0;
 
   private void addNew(int[] arr, int ptr, int value) {
     arr[ptr] = value;
@@ -59,9 +59,11 @@ public class HeapSort {
 
 
   /**
-   * Method uses all other methods to do heap sort
-   * @param arr input array for integer elements
+   * Method uses all other methods to do heap sort.
+   *
+   * @param arr input array for integer elements.
    */
+
   public void sort(int[] arr) {
     int curr;
     int len = arr.length;
