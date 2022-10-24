@@ -56,10 +56,12 @@ public class HeapSort {
     arr[last] = res;
     return res;
   }
-  /**
-   * Main method using other methods to do heap sort.
-   */
 
+
+  /**
+   * Method uses all other methods to do heap sort
+   * @param arr input array for integer elements
+   */
   public void sort(int[] arr) {
     int curr;
     int len = arr.length;
@@ -73,6 +75,5 @@ public class HeapSort {
       last--;
       shiftDown(heap, 0, last);
     }
-    System.out.println("result:" + Arrays.toString(arr));
   }
 }

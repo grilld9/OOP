@@ -4,32 +4,33 @@
 package ru.nsu.fit.maksimenkov.heapsort;
 
 import java.util.Arrays;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 class Tests {
 
     @Test
-    public void test1() {
+    public void testOfReverseOrder() {
         int[] array = new int[]{5, 4, 3, 2, 1};
-        System.out.println("test#1:" + Arrays.toString(array));
+        int[] arraySorted = new int[]{1, 2, 3, 4, 5};
         HeapSort ma = new HeapSort();
         ma.sort(array);
-        System.out.println();
+        Assertions.assertArrayEquals(array, arraySorted);
     }
     @Test
     public void test2() {
         int[] array = new int[]{5, 6, 3, 9, 4, 6, 2, 0, 1, 3, 6, 8, 65, 34, 32, 77, 21, 79};
-        System.out.println("test#2:" + Arrays.toString(array));
+        int[] arraySorted = new int[]{0, 1, 2, 3, 3, 4, 5, 6, 6, 6, 8, 9, 21, 32, 34, 65, 77, 79};
         HeapSort ma = new HeapSort();
         ma.sort(array);
-        System.out.println();
+        Assertions.assertArrayEquals(array, arraySorted);
     }
     @Test
     public void test3() {
         int[] array = new int[]{-5, -4, 2, 54, -54, 4, 8, -8, -25, 1, 0};
-        System.out.println("test#3:" + Arrays.toString(array));
+        int[] arraySorted = new int[]{-54, -25, -8, -5, -4, 0, 1, 2, 4, 8, 54};
         HeapSort ma = new HeapSort();
         ma.sort(array);
-        System.out.println();
+        Assertions.assertArrayEquals(array, arraySorted);
     }
 }
