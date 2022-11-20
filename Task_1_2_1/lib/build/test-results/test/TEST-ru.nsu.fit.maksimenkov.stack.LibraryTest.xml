@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="ru.nsu.fit.maksimenkov.stack.LibraryTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2022-11-20T07:47:56" hostname="DESKTOP-QKD90DE" time="0.031">
+  <properties/>
+  <testcase name="test1()" classname="ru.nsu.fit.maksimenkov.stack.LibraryTest" time="0.031"/>
+  <system-out><![CDATA[[2]
+[2, 7]
+[2, 7, 8, 4]
+[2, 7, 8]
+[2]
+1
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
