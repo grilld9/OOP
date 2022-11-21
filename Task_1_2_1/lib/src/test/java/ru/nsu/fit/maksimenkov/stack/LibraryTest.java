@@ -4,36 +4,70 @@
 package ru.nsu.fit.maksimenkov.stack;
 
 import java.util.Arrays;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.AssertionsKt;
 import org.junit.jupiter.api.Test;
 
 class LibraryTest {
 
-  void printStack(Stack stack){
-    int n = stack.count();
-    int[] arr = new int[n];
-    for (int i = 1, j = 0; i <= n; i++, j++){
-      arr[j] = stack.arr[i];
-    }
-    System.out.println(Arrays.toString(arr));
-  }
   @Test
-  void test1() {
+  public void pushIntoStackTest(){
+    Stack stack = new Stack();
+    stack.push(2);
+    stack.push(3);
+    int[] trueStack = new int[]{2, 3};
+    Assertions.assertEquals(trueStack[0], stack.arr[1]);
+    Assertions.assertEquals(trueStack[1], stack.arr[2]);
+    Assertions.assertEquals(2, stack.count());
+  }
+
+  @Test
+  public void popFromStackTest(){
+    Stack stack = new Stack();
+    stack.push(2);
+    stack.push(3);
+    try{
+      int x = stack.pop();
+      int y = stack.pop();
+      Assertions.assertEquals(3, x);
+      Assertions.assertEquals(2, y);
+    }
+    catch(Exception exception){
+      System.out.println(exception.getMessage());
+    }
+  }
+
+  @Test
+  public void pushStackIntoStackTest(){
     Stack stack1 = new Stack();
     Stack stack2 = new Stack();
-    Stack stack3 = new Stack();
+    int[] trueStack = new int[]{1, 2, 3, 6, 5, 4};
+    stack1.push(1);
     stack1.push(2);
-    printStack(stack1);
-    stack1.push(7);
-    printStack(stack1);
+    stack1.push(3);
     stack2.push(4);
-    stack2.push(8);
+    stack2.push(5);
+    stack2.push(6);
     stack1.pushStack(stack2);
-    printStack(stack1);
+    Assertions.assertEquals(trueStack[0], stack1.arr[1]);
+    Assertions.assertEquals(trueStack[1], stack1.arr[2]);
+    Assertions.assertEquals(trueStack[2], stack1.arr[3]);
+    Assertions.assertEquals(trueStack[3], stack1.arr[4]);
+    Assertions.assertEquals(trueStack[4], stack1.arr[5]);
+    Assertions.assertEquals(trueStack[5], stack1.arr[6]);
+    Assertions.assertEquals(6, stack1.count());
+  }
 
-    int x = stack1.pop();
-    printStack(stack1);
-    stack3 = stack1.popStack(2);
-    printStack(stack1);
-    System.out.println(stack1.count());
+  @Test
+  public void popStackFromStackTest() {
+    int[] trueStack = new int[]{3, 2, 1};
+    Stack stack1 = new Stack();
+    stack1.push(1);
+    stack1.push(2);
+    stack1.push(3);
+    Stack stack2 = stack1.popStack(3);
+    Assertions.assertEquals(trueStack[0], stack2.arr[1]);
+    Assertions.assertEquals(trueStack[1], stack2.arr[2]);
+    Assertions.assertEquals(trueStack[2], stack2.arr[3]);
   }
 }

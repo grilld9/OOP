@@ -43,14 +43,13 @@ public class Stack {
    * @return -1000000 if stack is empty or element if stack is not empty.
    *
    */
-  public int pop() {
+  public int pop() throws Exception {
     if (last > 0) {
       int x = arr[last];
       last--;
       return x;
     } else {
-      System.out.println("Stack is empty!");
-      return -1000000;
+      throw new Exception("NoSuchElementException");
     }
   }
 
@@ -70,10 +69,15 @@ public class Stack {
    */
   public void pushStack(Stack stack) {
     while (stack.count() != 0) {
-      int x = stack.pop();
-      push(x);
-      if (last == stackMaxIdx) {
-        extendArray(arr);
+      try{
+        int x = stack.pop();
+        push(x);
+        if (last == stackMaxIdx) {
+          extendArray(arr);
+        }
+      }
+      catch (Exception exception) {
+        System.out.println(exception.getMessage());
       }
     }
   }
@@ -88,9 +92,14 @@ public class Stack {
   public Stack popStack(int x) {
     Stack stack = new Stack();
     for (int i = 0; i < x; i++) {
-      stack.push(pop());
-      if (last == 0) {
-        return stack;
+      try{
+        stack.push(pop());
+        if (last == 0) {
+          return stack;
+        }
+      }
+      catch (Exception exception) {
+        System.out.println(exception.getMessage());
       }
     }
     return stack;
