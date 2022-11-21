@@ -13,13 +13,11 @@ public class Stack {
   private int last = 0;
   private int stackMaxIdx = 999;
 
-  private void extendArray(int[] arr) {
+  private void extendArray() {
     int[] arrNew = new int[arrCountElements * 2];
     arrCountElements *= 2;
     stackMaxIdx = arrCountElements - 1;
-    for (int i = 0; i < last; i++) {
-      arrNew[i] = arr[i];
-    }
+    if (last >= 0) System.arraycopy(arr, 0, arrNew, 0, last);
     arr = arrNew;
   }
 
@@ -33,7 +31,7 @@ public class Stack {
       last++;
       arr[last] = x;
     } else {
-      extendArray(arr);
+      extendArray();
     }
   }
 
@@ -73,7 +71,7 @@ public class Stack {
         int x = stack.pop();
         push(x);
         if (last == stackMaxIdx) {
-          extendArray(arr);
+          extendArray();
         }
       }
       catch (Exception exception) {
