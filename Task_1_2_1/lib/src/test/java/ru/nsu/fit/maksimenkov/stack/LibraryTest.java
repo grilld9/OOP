@@ -3,9 +3,7 @@
  */
 package ru.nsu.fit.maksimenkov.stack;
 
-import java.util.Arrays;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.AssertionsKt;
 import org.junit.jupiter.api.Test;
 
 class LibraryTest {
@@ -33,7 +31,7 @@ class LibraryTest {
       Assertions.assertEquals(2, y);
     }
     catch(Exception exception){
-      System.out.println(exception.getMessage());
+      System.err.println(exception.getMessage());
     }
   }
 

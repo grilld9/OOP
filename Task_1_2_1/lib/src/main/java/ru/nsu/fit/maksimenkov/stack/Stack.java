@@ -4,6 +4,8 @@
 
 package ru.nsu.fit.maksimenkov.stack;
 
+import java.util.NoSuchElementException;
+
 /**
  * Stack class.
  */
@@ -41,13 +43,13 @@ public class Stack {
    * @return -1000000 if stack is empty or element if stack is not empty.
    *
    */
-  public int pop() throws Exception {
+  public int pop() throws NoSuchElementException {
     if (last > 0) {
       int x = arr[last];
       last--;
       return x;
     } else {
-      throw new Exception("NoSuchElementException");
+      throw new NoSuchElementException();
     }
   }
 
@@ -97,7 +99,7 @@ public class Stack {
         }
       }
       catch (Exception exception) {
-        System.out.println(exception.getMessage());
+        System.err.println(exception.getMessage());
       }
     }
     return stack;
