@@ -22,4 +22,12 @@ class LibraryTest {
     Assertions.assertEquals("B", bfs.next());
     Assertions.assertEquals("AB", bfs.next());
   }
+
+  @Test
+  void removeNodeTest() {
+    Node<Integer> tree = new Node<Integer>();
+    tree.add(123);
+    tree.add(849);
+    tree.remove()
+  }
 }

@@ -8,16 +8,26 @@ public class Node<Type> {
   public ArrayList<Node<Type>> children = new ArrayList<>();
 
   public Node<Type> add(Type element) {
+    if (this.value == null) {
+      this.value = element;
+    }
+    else {
     Node<Type> node = new Node<>();
     node.value = element;
     this.children.add(node);
+    }
     return this;
   }
 
   public void add(Node<Type> node, Type element){
-    Node<Type> newNode = new Node<>();
-    newNode.value = element;
-    node.children.add(newNode);
+    if (node.value == null){
+      node.value = element;
+    }
+    else {
+      Node<Type> newNode = new Node<>();
+      newNode.value = element;
+      node.children.add(newNode);
+    }
   }
 
   public Node<Type> remove(Node<Type> node) throws NoSuchElementException {
