@@ -3,17 +3,14 @@
  */
 package ru.nsu.fit.maksimenkov.tree;
 
+import java.util.ConcurrentModificationException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-
-import java.util.ArrayList;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class LibraryTest {
   @Test
   void addNewNodeTest() {
-    Node<String> tree = new Node<String>();
+    Node<String> tree = new Node<>();
     tree.add("A");
     tree.add("B");
     tree.add("AB");
@@ -25,9 +22,29 @@ class LibraryTest {
 
   @Test
   void removeNodeTest() {
-    Node<Integer> tree = new Node<Integer>();
+    Node<Integer> tree = new Node<>();
     tree.add(123);
-    tree.add(849);
-    tree.remove()
+    Node<Integer> nodeToRemove = tree.add(849);
+    tree.remove(nodeToRemove);
+    BreadthFirstIterator<Integer> bfs = new BreadthFirstIterator<>(tree);
+    Assertions.assertEquals(123, bfs.next());
+    Assertions.assertFalse(bfs.hasNext());
+  }
+
+  @Test
+  void catchConcurrentModificationExceptionTest(){
+    Node<Integer> tree = new Node<>();
+    boolean exceptionCought = false;
+    tree.add(883);
+    Node<Integer> node1 = tree.add(884);
+    Node<Integer> node2 = tree.add(855);
+    tree.remove(node1);
+    BreadthFirstIterator<Integer> bfs = new BreadthFirstIterator<>(tree);
+    try{
+      tree.remove(node2);
+    } catch (ConcurrentModificationException e){
+      exceptionCought = true;
+    }
+    Assertions.assertTrue(exceptionCought);
   }
 }
