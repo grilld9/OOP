@@ -4,6 +4,7 @@
 package ru.nsu.fit.maksimenkov.tree;
 
 import java.util.ConcurrentModificationException;
+import java.util.Iterator;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -14,10 +15,11 @@ class LibraryTest {
     tree.add("A");
     tree.add("B");
     tree.add("AB");
-    BreadthFirstIterator<String> bfs = new BreadthFirstIterator<>(tree);
-    Assertions.assertEquals("A", bfs.next());
-    Assertions.assertEquals("B", bfs.next());
-    Assertions.assertEquals("AB", bfs.next());
+    tree.setBfs();
+    Iterator<Node<String>> bfs = tree.iterator();
+    Assertions.assertEquals("A", bfs.next().value);
+    Assertions.assertEquals("B", bfs.next().value);
+    Assertions.assertEquals("AB", bfs.next().value);
   }
 
   @Test
@@ -26,25 +28,27 @@ class LibraryTest {
     tree.add(123);
     Node<Integer> nodeToRemove = tree.add(849);
     tree.remove(nodeToRemove);
-    BreadthFirstIterator<Integer> bfs = new BreadthFirstIterator<>(tree);
-    Assertions.assertEquals(123, bfs.next());
-    Assertions.assertFalse(bfs.hasNext());
+    tree.setDfs();
+    BreadthFirstIterator<Integer> dfs = new BreadthFirstIterator<>(tree);
+    Assertions.assertEquals(123, dfs.next().value);
+    Assertions.assertFalse(dfs.hasNext());
   }
 
   @Test
-  void catchConcurrentModificationExceptionTest(){
+  void concurrentModExceptionCheck(){
+    boolean isExceptionCatch = false;
     Node<Integer> tree = new Node<>();
-    boolean exceptionCought = false;
-    tree.add(883);
-    Node<Integer> node1 = tree.add(884);
-    Node<Integer> node2 = tree.add(855);
-    tree.remove(node1);
-    BreadthFirstIterator<Integer> bfs = new BreadthFirstIterator<>(tree);
+    tree.add(123);
+    Node<Integer> node2 = tree.add(758);
+    Node<Integer> node3 = tree.add(543);
+    tree.setBfs();
     try{
-      tree.remove(node2);
+      for (Node<Integer> node : tree){
+        tree.add(node3, 859);
+      }
     } catch (ConcurrentModificationException e){
-      exceptionCought = true;
+      isExceptionCatch = true;
     }
-    Assertions.assertTrue(exceptionCought);
+    Assertions.assertTrue(isExceptionCatch);
   }
 }

@@ -1,5 +1,6 @@
 package ru.nsu.fit.maksimenkov.tree;
 
+import java.util.ConcurrentModificationException;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -12,24 +13,28 @@ import java.util.Stack;
  * @param <T> type of data.
  *
  */
-public class DepthFirstSearchIterator<T>  implements Iterator<T> {
+public class DepthFirstSearchIterator<T>  implements Iterator<Node<T>> {
   private Set<Node<T>> visited = new HashSet<>();
   private Stack<Iterator<Node<T>>> stack = new Stack<>();
   private Node<T> node;
   private Node<T> next;
+
+  private int modCount;
+
+  public int getModCount() {
+    return modCount;
+  }
 
   /**
    * Depth First Search iterator.
    *
    * @param g root of tree.
    *
-   * @param startingVertex same with root.
    */
-  public DepthFirstSearchIterator(Node<T> g, T startingVertex) {
+  public DepthFirstSearchIterator(Node<T> g) {
     this.stack.push(g.children.iterator());
     this.node = g;
     this.next = g;
-    g.isIteratorWorks = true;
   }
 
   @Override
@@ -43,19 +48,19 @@ public class DepthFirstSearchIterator<T>  implements Iterator<T> {
   }
 
   @Override
-  public T next() {
+  public Node<T> next() {
     if (!hasNext()) {
       throw new NoSuchElementException();
     }
     try {
       this.visited.add(this.next);
-      return this.next.value;
+      return this.next;
     } finally {
       this.advance();
     }
   }
 
-  private void advance() {
+  private void advance() throws ConcurrentModificationException {
     Iterator<Node<T>> neighbors = this.stack.peek();
     do {
       while (!neighbors.hasNext()) {
@@ -67,6 +72,9 @@ public class DepthFirstSearchIterator<T>  implements Iterator<T> {
         neighbors = this.stack.peek();
       }
       this.next = neighbors.next();
+      if (this.next.getModCount() < this.node.getModCount()) {
+        throw new ConcurrentModificationException();
+      }
     } while (this.visited.contains(this.next));
     this.stack.push(this.node.children.iterator());
   }

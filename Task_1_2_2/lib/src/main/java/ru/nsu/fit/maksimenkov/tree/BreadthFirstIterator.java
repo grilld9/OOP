@@ -1,5 +1,6 @@
 package ru.nsu.fit.maksimenkov.tree;
 
+import java.util.ConcurrentModificationException;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -12,10 +13,12 @@ import java.util.Set;
  *
  * @param <T> type of data.
  */
-public class BreadthFirstIterator<T> implements Iterator<T> {
+public class BreadthFirstIterator<T> implements Iterator<Node<T>> {
   private Set<Node<T>> visited = new HashSet<>();
   private Queue<Node<T>> queue = new LinkedList<>();
   private Node<T> node;
+
+  private int modCount;
 
   /**
    * initialization method.
@@ -26,7 +29,7 @@ public class BreadthFirstIterator<T> implements Iterator<T> {
     this.node = t;
     this.queue.add(t);
     this.visited.add(t);
-    t.isIteratorWorks = true;
+    modCount = t.getModCount();
   }
 
   @Override
@@ -40,17 +43,20 @@ public class BreadthFirstIterator<T> implements Iterator<T> {
   }
 
   @Override
-  public T next() {
+  public Node<T> next() throws  ConcurrentModificationException, NoSuchElementException {
     if (!hasNext()) {
       throw new NoSuchElementException();
     }
     Node<T> next = queue.remove();
+    if (next.getModCount() > modCount) {
+      throw new ConcurrentModificationException();
+    }
     for (Node<T> neighbor : next.children) {
       if (!this.visited.contains(neighbor)) {
         this.queue.add(neighbor);
         this.visited.add(neighbor);
       }
     }
-    return next.value;
+    return next;
   }
 }
