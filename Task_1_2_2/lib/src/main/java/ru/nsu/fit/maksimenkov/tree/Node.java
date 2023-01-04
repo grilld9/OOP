@@ -12,58 +12,47 @@ import java.util.NoSuchElementException;
  */
 public class Node<T> implements Iterable<Node<T>> {
 
-  private Node<T> parent;
-
-  private enum SearchType {
-    DFS,
-    BFS
-  }
-
-  private SearchType searchType;
-
-  public void setDfs() {
-    searchType = SearchType.DFS;
-  }
-
-  public void setBfs() {
-    searchType = SearchType.BFS;
-  }
-
-  public void setParent(Node<T> parentToSet) {
-    parent = parentToSet;
-  }
-
-  public Node<T> getParent() {
-    return parent;
-  }
+  /**
+   * list of children of this node.
+   */
+  public ArrayList<Node<T>> children = new ArrayList<>();
 
   /**
    * value in node.
    */
   public T value;
 
-  /**
-   * flag for catching exception.
-   */
+  private Node<T> parent;
+
+  private SearchType searchType;
+
   private int modCount;
+
+  public void setParent(Node<T> parentToSet) {
+    parent = parentToSet;
+    modCount = parent.modCount;
+  }
+
+  public Node<T> getParent() {
+    return parent;
+  }
+
+  public void setMode(SearchType searchTypeToSet){
+    searchType = searchTypeToSet;
+  }
+
 
   public int getModCount() {
     return modCount;
   }
 
-  public void setModCount(int count) {
-    modCount = count;
+  public void incModCount() {
+    modCount++;
     Node<T> nextParent = getParent();
-    while (nextParent != null) {
-      nextParent.setModCount(count);
-      nextParent = nextParent.getParent();
+    if (nextParent != null) {
+      nextParent.incModCount();
     }
   }
-
-  /**
-   * list of children of this node.
-   */
-  public ArrayList<Node<T>> children = new ArrayList<>();
 
   /**
    * method of adding some element to this node.
@@ -74,12 +63,12 @@ public class Node<T> implements Iterable<Node<T>> {
   public Node<T> add(T element) {
     if (this.value == null) {
       this.value = element;
-      setModCount(this.getModCount() + 1);
+      incModCount();
       return this;
     } else {
       Node<T> node = new Node<>();
       node.setParent(this);
-      node.setModCount(this.getModCount() + 1);
+      node.incModCount();
       node.value = element;
       this.children.add(node);
       return node;
@@ -96,13 +85,13 @@ public class Node<T> implements Iterable<Node<T>> {
   public void add(Node<T> node, T element) {
     if (node.value == null) {
       node.value = element;
-      node.setModCount(node.getModCount() + 1);
+      node.incModCount();
     } else {
       Node<T> newNode = new Node<>();
       newNode.value = element;
       node.children.add(newNode);
       newNode.setParent(node);
-      newNode.setModCount(node.getModCount() + 1);
+      newNode.incModCount();
     }
   }
 
@@ -115,9 +104,10 @@ public class Node<T> implements Iterable<Node<T>> {
    * @throws ConcurrentModificationException .
    */
   public void remove(Node<T> node) throws NoSuchElementException {
-    this.setModCount(node.getModCount() + 1);
     if (!children.remove(node)) {
       throw new NoSuchElementException();
+    } else {
+      incModCount();
     }
   }
 
