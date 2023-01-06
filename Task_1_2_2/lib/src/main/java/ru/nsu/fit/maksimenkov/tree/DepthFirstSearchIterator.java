@@ -1,11 +1,11 @@
 package ru.nsu.fit.maksimenkov.tree;
 
 import java.util.ConcurrentModificationException;
+import java.util.Deque;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Set;
-import java.util.Stack;
 
 /**
  * Depth First Search iterator.
@@ -14,16 +14,11 @@ import java.util.Stack;
  *
  */
 public class DepthFirstSearchIterator<T>  implements Iterator<Node<T>> {
-  private Set<Node<T>> visited = new HashSet<>();
-  private Stack<Iterator<Node<T>>> stack = new Stack<>();
-  private Node<T> node;
+  private final Set<Node<T>> visited = new HashSet<>();
+  private Deque<Iterator<Node<T>>> stack;
+  private final Node<T> node;
   private Node<T> next;
 
-  private int modCount;
-
-  public int getModCount() {
-    return modCount;
-  }
 
   /**
    * Depth First Search iterator.
@@ -32,9 +27,9 @@ public class DepthFirstSearchIterator<T>  implements Iterator<Node<T>> {
    *
    */
   public DepthFirstSearchIterator(Node<T> g) {
-    this.stack.push(g.children.iterator());
-    this.node = g;
-    this.next = g;
+    stack.push(g.getChildrenIterator());
+    node = g;
+    next = g;
   }
 
   @Override
@@ -53,29 +48,29 @@ public class DepthFirstSearchIterator<T>  implements Iterator<Node<T>> {
       throw new NoSuchElementException();
     }
     try {
-      this.visited.add(this.next);
-      return this.next;
+      visited.add(next);
+      return next;
     } finally {
-      this.advance();
+      advance();
     }
   }
 
   private void advance() throws ConcurrentModificationException {
-    Iterator<Node<T>> neighbors = this.stack.peek();
+    Iterator<Node<T>> neighbors = stack.peek();
     do {
       while (!neighbors.hasNext()) {
-        this.stack.pop();
-        if (this.stack.isEmpty()) {
-          this.next = null;
+        stack.pop();
+        if (stack.isEmpty()) {
+          next = null;
           return;
         }
-        neighbors = this.stack.peek();
+        neighbors = stack.peek();
       }
-      this.next = neighbors.next();
-      if (this.next.getModCount() < this.node.getModCount()) {
+      next = neighbors.next();
+      if (next.getModCount() < node.getModCount()) {
         throw new ConcurrentModificationException();
       }
-    } while (this.visited.contains(this.next));
-    this.stack.push(this.node.children.iterator());
+    } while (visited.contains(next));
+    stack.push(node.getChildrenIterator());
   }
 }

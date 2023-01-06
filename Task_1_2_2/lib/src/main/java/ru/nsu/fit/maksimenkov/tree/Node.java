@@ -1,6 +1,6 @@
 package ru.nsu.fit.maksimenkov.tree;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -15,18 +15,34 @@ public class Node<T> implements Iterable<Node<T>> {
   /**
    * list of children of this node.
    */
-  public ArrayList<Node<T>> children = new ArrayList<>();
+  private List<Node<T>> children;
 
   /**
    * value in node.
    */
-  public T value;
+  private T value;
 
   private Node<T> parent;
 
   private SearchType searchType;
 
   private int modCount;
+
+  public void addChild(Node<T> child){
+    children.add(child);
+  }
+
+  public int getChildrenCount() {
+    return children.size();
+  }
+
+  public Node<T> getChild(int i) {
+    return children.get(i);
+  }
+
+  public Iterator<Node<T>> getChildrenIterator() {
+    return children.iterator();
+  }
 
   public void setParent(Node<T> parentToSet) {
     parent = parentToSet;

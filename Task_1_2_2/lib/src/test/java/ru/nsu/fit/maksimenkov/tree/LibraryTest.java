@@ -7,7 +7,6 @@ import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-
 class LibraryTest {
   @Test
   void addNewNodeTest() {

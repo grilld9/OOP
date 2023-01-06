@@ -14,11 +14,10 @@ import java.util.Set;
  * @param <T> type of data.
  */
 public class BreadthFirstIterator<T> implements Iterator<Node<T>> {
-  private Set<Node<T>> visited = new HashSet<>();
-  private Queue<Node<T>> queue = new LinkedList<>();
-  private Node<T> node;
+  private final Set<Node<T>> visited = new HashSet<>();
+  private final Queue<Node<T>> queue = new LinkedList<>();
 
-  private int modCount;
+  private final int modCount;
 
   /**
    * initialization method.
@@ -26,7 +25,6 @@ public class BreadthFirstIterator<T> implements Iterator<Node<T>> {
    * @param t tree collection.
    */
   public BreadthFirstIterator(Node<T> t) {
-    this.node = t;
     this.queue.add(t);
     this.visited.add(t);
     modCount = t.getModCount();
@@ -51,7 +49,8 @@ public class BreadthFirstIterator<T> implements Iterator<Node<T>> {
     if (next.getModCount() > modCount) {
       throw new ConcurrentModificationException();
     }
-    for (Node<T> neighbor : next.children) {
+    for (int i = 0; i < next.getChildrenCount(); i++) {
+      Node<T> neighbor = next.getChild(i);
       if (!this.visited.contains(neighbor)) {
         this.queue.add(neighbor);
         this.visited.add(neighbor);
