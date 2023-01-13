@@ -5,62 +5,46 @@
 package ru.nsu.fit.maximenkov;
 
 import java.io.*;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Scanner;
+import java.util.List;
 
 /**
  * Class of finding all enters of substring into some string.
  */
 public class FindSubString {
 
-  /**
-   * main method runs program.
-   *
-   * @param args arguments of command line
-   *
-   */
-  public static void main(String[] args) {
-    Scanner in = new Scanner(System.in, StandardCharsets.UTF_8);
-    String stringToSearch = in.nextLine();
-    try (FileInputStream fis =
-        new FileInputStream("C://study/OOP2/OOP/Task_1_3_1/lib/src/main/resources/input.txt")) {
-      char[] buffer1 = new char[512];
-      char[] buffer2 = null;
-      ArrayList<Integer> indexes = new ArrayList<>();
-      InputStreamReader isr = new InputStreamReader(fis, StandardCharsets.UTF_8);
-      BufferedReader reader = new BufferedReader(isr);
-      while (reader.read(buffer1) != -1) {
-        int idx;
-        if (buffer2 != null) {
-          String textBlock1 = String.valueOf(buffer1);
-          String textBlock2 = String.valueOf(buffer2);
-          String unitedBlock = textBlock2.concat(textBlock1);
-          idx = 0;
-          while (idx != -1) {
-            idx = unitedBlock.indexOf(stringToSearch, idx);
-            if (idx != -1) {
-              indexes.add(idx);
-            }
-          }
-        } else {
-          String textBlock1 = String.valueOf(buffer1);
-          idx = 0;
-          while (true) {
-            idx = textBlock1.indexOf(stringToSearch, idx + 1);
-            if (idx != -1) {
-              indexes.add(idx);
-            } else {
-              break;
-            }
+  public static List<Integer> findSubstring(Reader reader, String substring) throws IOException {
+    char[] buffer1 = new char[512];
+    char[] buffer2 = null;
+    List<Integer> indexes = new ArrayList<>();
+    while (reader.read(buffer1) != -1) {
+      int idx;
+      if (buffer2 != null) {
+        String textBlock1 = String.valueOf(buffer1);
+        String textBlock2 = String.valueOf(buffer2);
+        String unitedBlock = textBlock2.concat(textBlock1);
+        idx = 0;
+        while (idx != -1) {
+          idx = unitedBlock.indexOf(substring, idx + 1);
+          if (idx != -1 && !indexes.contains(idx)) {
+            indexes.add(idx);
           }
         }
-        buffer2 = buffer1.clone();
+      } else {
+        String textBlock1 = String.valueOf(buffer1);
+        idx = 0;
+        while (true) {
+          idx = textBlock1.indexOf(substring, idx + 1);
+          if (idx != -1) {
+            indexes.add(idx);
+          } else {
+            break;
+          }
+        }
       }
-      System.out.println(indexes);
-    } catch (IOException e) {
-      System.out.println(e.toString());
+      buffer2 = buffer1.clone();
     }
+  return indexes;
   }
 }
 
