@@ -13,8 +13,17 @@ import java.util.List;
  */
 public class FindSubString {
 
+  /**
+   * Function of finding some substring in text.
+   *
+   * @param reader some text reader.
+   * @param substring we need to find.
+   * @return indexes list of substring enters.
+   * @throws IOException in case we cant read.
+   */
   public static List<Integer> findSubstring(Reader reader, String substring) throws IOException {
-    char[] buffer1 = new char[512];
+    int countSymbolsInBlock = substring.length() * 2, blockNumber = 0;
+    char[] buffer1 = new char[countSymbolsInBlock];
     char[] buffer2 = null;
     List<Integer> indexes = new ArrayList<>();
     while (reader.read(buffer1) != -1) {
@@ -26,11 +35,12 @@ public class FindSubString {
         idx = 0;
         while (idx != -1) {
           idx = unitedBlock.indexOf(substring, idx + 1);
-          if (idx != -1 && !indexes.contains(idx)) {
-            indexes.add(idx);
+          if (idx != -1 && !indexes.contains(idx + countSymbolsInBlock * blockNumber)) {
+            indexes.add(idx + countSymbolsInBlock * blockNumber);
           }
         }
       } else {
+        blockNumber--;
         String textBlock1 = String.valueOf(buffer1);
         idx = 0;
         while (true) {
@@ -43,8 +53,9 @@ public class FindSubString {
         }
       }
       buffer2 = buffer1.clone();
+      blockNumber++;
     }
-  return indexes;
+    return indexes;
   }
 }
 
