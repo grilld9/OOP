@@ -16,6 +16,7 @@ public class SelfParallel {
 
   public boolean execution(List<Integer> array) throws ExecutionException, InterruptedException {
     ThreadPool threadPool = new ThreadPool(nThreads);
+    new Thread(threadPool).start();
     long start = System.currentTimeMillis();
 
     List<Future<Boolean>> futures = new ArrayList<>();
