@@ -2,18 +2,18 @@ package ru.nsu.fit.maksimenkov.simplenumbers;
 
 import java.util.concurrent.Callable;
 
-public class IsSimpleCall implements  Callable<Integer> {
+public class IsSimpleCall implements  Callable<Boolean> {
   int number;
-  IsSimpleCall(int num) {
+  public IsSimpleCall(int num) {
     this.number = num;
   }
   @Override
-  public Integer call() throws Exception {
+  public Boolean call() {
     for (int i = 2; i < number; i++) {
       if (number % i == 0) {
-        return 0;
+        return false;
       }
     }
-    return 1;
+    return true;
   }
 }

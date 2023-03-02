@@ -1,4 +1,4 @@
-package ru.nsu.fit.maksimenkov.simplenumbers;
+package ru.nsu.fit.maksimenkov.simplenumbers.sequence;
 
 import java.util.ArrayList;
 import java.util.List;
