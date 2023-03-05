@@ -1,33 +1,34 @@
 package ru.nsu.fit.maksimenkov.simplenumbers.selfthreadpool;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.*;
 
 
 public class ThreadPool implements Runnable {
-  private final Queue<Callable<Boolean>> mainQueue = new ConcurrentLinkedQueue<>();
-
+  private final Queue<Callable<Boolean>> mainQueue = new LinkedList<>();
   private List<TaskWorker> workers = new ArrayList<>();
-  public volatile List<Boolean> results = new ArrayList<>();
-  private volatile boolean isTMRunning = true;
+  private List<Boolean> results = new ArrayList<>();
+
+  private Thread taskManager;
 
   public ThreadPool(int nThreads) {
+    taskManager = new Thread(this);
     for (int i = 0; i < nThreads; i++) {
       TaskWorker tw = new TaskWorker();
       workers.add(tw);
-      tw.start();
     }
   }
 
 
-  private boolean noThreadsAlive() {
+  private synchronized void addResult(Boolean result) {
+    results.add(result);
+  }
+  private boolean allThreadsWaiting() {
     for (TaskWorker worker : workers) {
-      if (worker.isAlive()) {
+      if (!worker.getState().equals(Thread.State.WAITING)) {
         return false;
       }
     }
@@ -35,38 +36,39 @@ public class ThreadPool implements Runnable {
   }
   public List<Boolean> invokeAll(List<Callable<Boolean>> tasks) {
     mainQueue.addAll(tasks);
-    new Thread(this).start();
-    while (!noThreadsAlive());
+    taskManager.start();
+    for (TaskWorker worker : workers) {
+      worker.start();
+    }
+    while(taskManager.isAlive());
     return results;
   }
   @Override
   public void run() {
-    isTMRunning = true;
-    while (!mainQueue.isEmpty()) {
+    while (true) {
       for (TaskWorker worker : workers) {
-        if (!mainQueue.isEmpty()) {
-          if (worker.workerQueue.remainingCapacity() > 0) {
-            worker.workerQueue.offer(mainQueue.poll());
-          }
+        if (mainQueue.isEmpty()) {
+          while(!allThreadsWaiting());
+          return;
+        }
+        else {
+          worker.workerQueue.offer(mainQueue.poll());
         }
       }
     }
-    isTMRunning = false;
   }
 
   private class TaskWorker extends Thread {
 
-    private BlockingQueue<Callable<Boolean>> workerQueue = new ArrayBlockingQueue<>(1000);
+    private BlockingQueue<Callable<Boolean>> workerQueue = new LinkedBlockingQueue<>();
     @Override
     public void run() {
-      while (!workerQueue.isEmpty() || isTMRunning) {
-        Callable<Boolean> nextTask = workerQueue.poll();
-        if (nextTask != null) {
-          try {
-            results.add(nextTask.call());
-          } catch (Exception e) {
-            throw new RuntimeException(e);
-          }
+      while (true) {
+        try {
+          Callable<Boolean> nextTask = workerQueue.take();
+          addResult(nextTask.call());
+        } catch (Exception e) {
+          throw new RuntimeException(e);
         }
       }
     }
