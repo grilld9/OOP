@@ -16,19 +16,19 @@ public class LibraryTest {
   @Test
   public void parallelTest() throws InterruptedException, ExecutionException, FileNotFoundException {
     Parallel pl = new Parallel();
-    pl.setCountOfThreads(6);
+    pl.setCountOfThreads(8);
     File file = new File("src\\main\\resources\\nums.txt");
     Scanner scanner = new Scanner(file.getAbsoluteFile());
     List<Integer> list = new ArrayList<>();
     while(scanner.hasNext()) {
       list.add(scanner.nextInt());
     }
-    pl.parallelExecution(list);
+    System.out.println(pl.parallelExecution(list));
   }
 
   @Test
   public void selfParallelTest() throws FileNotFoundException, ExecutionException, InterruptedException {
-    SelfParallel sPl = new SelfParallel(6);
+    SelfParallel sPl = new SelfParallel(8);
     File file = new File("src\\main\\resources\\nums.txt");
     Scanner scanner = new Scanner(file.getAbsoluteFile());
     List<Integer> list = new ArrayList<>();

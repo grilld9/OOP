@@ -2,7 +2,6 @@ package ru.nsu.fit.maksimenkov.simplenumbers.threadpool;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -17,19 +16,19 @@ public class Parallel {
   public boolean parallelExecution(List<Integer> numbers)
       throws InterruptedException, ExecutionException {
     ExecutorService es = Executors.newFixedThreadPool(countOfThreads);
-    List<Callable<Boolean>> tasks = new ArrayList<>();
+    List<Future<Boolean>> futures = new ArrayList<>();
     for (Integer number : numbers) {
-      tasks.add(new IsSimpleCall(number));
+      futures.add(es.submit(new IsSimpleCall(number)));
     }
     long start = System.currentTimeMillis();
-    List<Future<Boolean>> listResult = es.invokeAll(tasks);
-    System.out.format("Executed by %d ms\n", System.currentTimeMillis() - start);
-    for (Future<Boolean> result : listResult) {
-      if (result.get()) {
-        return true;
+    boolean result = false;
+    for (Future<Boolean> future : futures) {
+      if (future.get()) {
+        result = true;
       }
     }
-    return false;
+    System.out.format("Executed by %d ms\n", System.currentTimeMillis() - start);
+    return result;
   }
 }
 
