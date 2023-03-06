@@ -27,7 +27,7 @@ public class LibraryTest {
   }
 
   @Test
-  public void selfParallelTest() throws FileNotFoundException {
+  public void selfParallelTest() throws FileNotFoundException, ExecutionException, InterruptedException {
     SelfParallel sPl = new SelfParallel(6);
     File file = new File("src\\main\\resources\\nums.txt");
     Scanner scanner = new Scanner(file.getAbsoluteFile());
