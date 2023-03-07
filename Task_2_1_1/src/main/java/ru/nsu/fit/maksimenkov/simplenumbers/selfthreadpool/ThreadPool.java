@@ -7,11 +7,9 @@ import java.util.concurrent.*;
 public class ThreadPool implements Executor {
   private final BlockingQueue<Runnable> mainQueue = new LinkedBlockingQueue<>();
   private final List<TaskWorker> workers = new ArrayList<>();
-  private final int nThreads;
   private boolean isInitDone = false;
 
   public ThreadPool(int nThreads) {
-    this.nThreads = nThreads;
     for (int i = 0; i < nThreads; i++) {
       TaskWorker taskWorker = new TaskWorker();
       workers.add(taskWorker);
@@ -31,11 +29,6 @@ public class ThreadPool implements Executor {
   public void execute(Runnable command) {
     if (!isInitDone) {
       init();
-    }
-    if (workers.size() < nThreads) {
-      TaskWorker worker = new TaskWorker();
-      workers.add(worker);
-      worker.start();
     }
     mainQueue.add(command);
   }
