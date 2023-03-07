@@ -2,10 +2,10 @@ package ru.nsu.fit.maksimenkov.simplenumbers.selfthreadpool;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
-import ru.nsu.fit.maksimenkov.simplenumbers.Simple;
+import java.util.concurrent.*;
+
+import ru.nsu.fit.maksimenkov.simplenumbers.IsSimpleCall;
+//import ru.nsu.fit.maksimenkov.simplenumbers.Simple;
 
 public class SelfParallel {
   private final int nThreads;
@@ -14,11 +14,14 @@ public class SelfParallel {
     this.nThreads = nThreads;
   }
   public boolean execution(List<Integer> array) throws ExecutionException, InterruptedException {
-    List<Future<Boolean>> futures = new ArrayList<>();
-    Simple simple = new Simple();
+    List<FutureTask<Boolean>> futures = new ArrayList<>();
+    //Simple simple = new Simple();
     ThreadPool threadPool = new ThreadPool(nThreads);
     for (Integer number : array) {
-      futures.add(CompletableFuture.supplyAsync(() -> simple.isSimple(number), threadPool));
+      FutureTask<Boolean> ft = new FutureTask<>(new IsSimpleCall(number));
+      futures.add(ft);
+      threadPool.execute(ft);
+      //futures.add(CompletableFuture.supplyAsync(() -> simple.isSimple(number), threadPool));
     }
     long start = System.currentTimeMillis();
     boolean result = false;
