@@ -1,14 +1,16 @@
 package ru.nsu.fit.maksimenkov.pizzeria.couriers;
 
 
+import ru.nsu.fit.maksimenkov.pizzeria.Consumer;
 import ru.nsu.fit.maksimenkov.pizzeria.Order;
+import ru.nsu.fit.maksimenkov.pizzeria.Producer;
 import ru.nsu.fit.maksimenkov.pizzeria.Worker;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 
-public class CourierWorker extends Thread implements Worker {
+public class CourierWorker extends Worker implements Consumer, Producer {
     private final BlockingQueue<Order> warehouse;
     private final BlockingQueue<String> loggerQueue;
     private final List<Order> ordersInTrunk;
@@ -21,20 +23,26 @@ public class CourierWorker extends Thread implements Worker {
         ordersInTrunk = new ArrayList<>(trunkCap);
     }
 
+
+    @Override
+    public void doWork() {
+        try {
+            Order order = takeOrder();
+            while (order != null) {
+                order = takeOrder();
+            }
+            while (!ordersInTrunk.isEmpty()) {
+                putOrder(ordersInTrunk.get(0));
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     @Override
     public void run() {
         while (!this.isInterrupted()) {
-            try {
-                Order order = takeOrder();
-                while (order != null) {
-                    order = takeOrder();
-                }
-                while (!ordersInTrunk.isEmpty()) {
-                    putOrder(ordersInTrunk.get(0));
-                }
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
+            doWork();
         }
     }
 

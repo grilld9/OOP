@@ -1,8 +1,6 @@
 package ru.nsu.fit.maksimenkov.pizzeria;
 
-public interface Worker {
+public abstract class Worker extends Thread {
 
-    Order takeOrder() throws InterruptedException;
-
-    void putOrder(Order order) throws InterruptedException;
+    public abstract void doWork();
 }

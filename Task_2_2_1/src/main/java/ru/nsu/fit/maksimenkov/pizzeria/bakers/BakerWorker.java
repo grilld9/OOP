@@ -1,12 +1,15 @@
 package ru.nsu.fit.maksimenkov.pizzeria.bakers;
 
+import ru.nsu.fit.maksimenkov.pizzeria.Consumer;
 import ru.nsu.fit.maksimenkov.pizzeria.Order;
+import ru.nsu.fit.maksimenkov.pizzeria.Producer;
 import ru.nsu.fit.maksimenkov.pizzeria.Worker;
+
 
 import java.util.concurrent.BlockingQueue;
 
 
-public class BakerWorker extends Thread implements Worker {
+public class BakerWorker extends Worker implements Consumer, Producer {
 
     private final BlockingQueue<Order> mainQueue;
     private final BlockingQueue<String> loggerQueue;
@@ -20,14 +23,19 @@ public class BakerWorker extends Thread implements Worker {
     }
 
     @Override
+    public void doWork() {
+        try {
+            Order order = takeOrder();
+            putOrder(order);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
     public void run() {
         while (!this.isInterrupted()) {
-            try {
-                Order order = takeOrder();
-                putOrder(order);
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
+            doWork();
         }
     }
 
