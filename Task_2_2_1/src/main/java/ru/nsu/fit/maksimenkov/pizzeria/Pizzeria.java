@@ -24,6 +24,11 @@ public class Pizzeria {
         warehouse = new LinkedBlockingQueue<>(Math.toIntExact(warehouseSize));
     }
 
+    public Pizzeria(PizzeriaConfig pizzeriaConfig) {
+        this.nBaker = pizzeriaConfig.getnBaker();
+        this.trunkCaps = pizzeriaConfig.getTrunkCaps();
+        this.warehouse = new LinkedBlockingQueue<>(Math.toIntExact(pizzeriaConfig.getWarehouse()));
+    }
     private void init() {
         initLogger();
         initBakers();
