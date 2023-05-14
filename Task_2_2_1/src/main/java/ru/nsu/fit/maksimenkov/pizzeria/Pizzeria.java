@@ -11,7 +11,7 @@ public class Pizzeria {
 
     private final Long nBaker;
     private final List<Integer> trunkCaps;
-    private final BlockingQueue<Order> mainQueue = new LinkedBlockingQueue<>(100);
+    private final BlockingQueue<Order> mainQueue = new LinkedBlockingQueue<>(10);
     private final BlockingQueue<String> loggerQueue = new LinkedBlockingQueue<>();
 
     private final BlockingQueue<Order> warehouse;
@@ -67,5 +67,10 @@ public class Pizzeria {
             init();
         }
         orderGenerator.start();
+    }
+
+    public void stop() throws InterruptedException {
+        orderGenerator.interrupt();
+        mainQueue.put(new Order(Order.getPoisonPill()));
     }
 }

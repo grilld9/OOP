@@ -22,7 +22,9 @@ public class LibraryTest {
         List<Integer> trunkCaps = Arrays.asList(1, 2);
         Pizzeria pizzeria = new Pizzeria(nBaker, warehouseSize, trunkCaps);
         pizzeria.start();
-        sleep(50000);
+        sleep(5000);
+        pizzeria.stop();
+        sleep(2000000);
     }
 
     @Test

@@ -42,6 +42,12 @@ public class BakerWorker extends Worker implements Consumer, Producer {
     @Override
     public Order takeOrder() throws InterruptedException {
         Order nextOrder = mainQueue.take();
+        if (nextOrder.getOrderNumber().equals(Order.getPoisonPill())) {
+            mainQueue.put(nextOrder);
+            warehouse.put(nextOrder);
+            loggerQueue.put("baker went home");
+            interrupt();
+        }
         loggerQueue.put(nextOrder.getOrderNumber() + ", cooking started");
         sleep(1000 * 5);
         loggerQueue.put(nextOrder.getOrderNumber() + ", cooked");

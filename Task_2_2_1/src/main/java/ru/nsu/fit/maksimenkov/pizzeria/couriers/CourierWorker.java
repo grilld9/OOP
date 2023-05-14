@@ -50,6 +50,11 @@ public class CourierWorker extends Worker implements Consumer, Producer {
     public Order takeOrder() throws InterruptedException {
         if (ordersInTrunk.isEmpty()) {
             Order order = warehouse.take();
+            if (order.getOrderNumber().equals(Order.getPoisonPill())) {
+                warehouse.put(order);
+                loggerQueue.put("courier went home");
+                interrupt();
+            }
             ordersInTrunk.add(order);
             loggerQueue.put(order.getOrderNumber() + ", taken by courier");
             return order;

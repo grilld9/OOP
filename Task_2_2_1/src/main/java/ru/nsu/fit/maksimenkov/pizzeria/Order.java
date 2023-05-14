@@ -11,4 +11,8 @@ public class Order {
     public Order(String orderNumber) {
         this.orderNumber = orderNumber;
     }
+
+    public static String getPoisonPill() {
+        return "finish";
+    }
 }
